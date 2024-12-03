@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2D Sphere Movement</title>
+  <style>
+    canvas {
+      display: block;
+      margin: 0 auto;
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas"></canvas>
+  <script>
+    // Canvas setup
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Circle properties
+    const circle = {
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+      radius: 20,
+      color: "blue",
+      speed: 5,
+    };
+
+    // Movement flags
+    const keys = {
+      w: false,
+      a: false,
+      s: false,
+      d: false,
+    };
+
+    // Event listeners for key presses
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "w") keys.w = true;
+      if (event.key === "a") keys.a = true;
+      if (event.key === "s") keys.s = true;
+      if (event.key === "d") keys.d = true;
+    });
+
+    window.addEventListener("keyup", (event) => {
+      if (event.key === "w") keys.w = false;
+      if (event.key === "a") keys.a = false;
+      if (event.key === "s") keys.s = false;
+      if (event.key === "d") keys.d = false;
+    });
+
+    // Update function to handle movement
+    function update() {
+      if (keys.w) circle.y -= circle.speed; // Move up
+      if (keys.a) circle.x -= circle.speed; // Move left
+      if (keys.s) circle.y += circle.speed; // Move down
+      if (keys.d) circle.x += circle.speed; // Move right
+
+      // Prevent circle from leaving the canvas
+      circle.x = Math.max(circle.radius, Math.min(canvas.width - circle.radius, circle.x));
+      circle.y = Math.max(circle.radius, Math.min(canvas.height - circle.radius, circle.y));
+    }
+
+    // Draw function to render the circle
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.beginPath();
+      ctx.arc(circle.x, circle.y, circle.radius, 0, Math.PI * 2);
+      ctx.fillStyle = circle.color;
+      ctx.fill();
+      ctx.closePath();
+    }
+
+    // Game loop
+    function gameLoop() {
+      update();
+      draw();
+      requestAnimationFrame(gameLoop);
+    }
+
+    // Start the game loop
+    gameLoop();
+  </script>
+</body>
+</html>
